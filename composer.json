@@ -1,7 +1,7 @@
 {
   "name": "hedali/poster",
   "description": "poster design",
-  "type": "project",
+  "type": "library",
   "require": {
     "php": ">=5.6.0"
   },
