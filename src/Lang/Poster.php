@@ -65,10 +65,10 @@ class Poster extends Base implements MyPoster
      * @param string $type 不改变形状normal 圆形circle
      * @return   [type]
      */
-    public function buildImage($src, $dst_x = 0, $dst_y = 0, $src_x = 0, $src_y = 0, $src_w = 0, $src_h = 0, $alpha = false, $type = 'normal')
+    public function buildImage($src, $dst_x = 0, $dst_y = 0, $src_x = 0, $src_y = 0, $src_w = 0, $src_h = 0, $alpha = false, $type = 'normal', $rotate = 0)
     {
 
-        $this->CopyImage($src, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $alpha, $type);
+        $this->CopyImage($src, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $alpha, $type, $rotate);
         return $this;
     }
 
@@ -90,7 +90,8 @@ class Poster extends Base implements MyPoster
             $value['src_h'] = $value['src_h'] ?? 0;
             $value['alpha'] = $value['alpha'] ?? false;
             $value['type'] = $value['type'] ?? 'normal';
-            $this->CopyImage($value['src'], $value['dst_x'], $value['dst_y'], $value['src_x'], $value['src_y'], $value['src_w'], $value['src_h'], $value['alpha'], $value['type']);
+            $value['rotate'] = $value['rotate'] ?? 0;
+            $this->CopyImage($value['src'], $value['dst_x'], $value['dst_y'], $value['src_x'], $value['src_y'], $value['src_w'], $value['src_h'], $value['alpha'], $value['type'], $value['rotate']);
         }
         return $this;
     }

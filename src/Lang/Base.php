@@ -327,6 +327,9 @@ class Base
         $bgWidth = !empty($src_w) ? $src_w : $Width;
         $bgHight = !empty($src_h) ? $src_h : $Hight;
 
+        $oldBgWidth = $bgWidth;
+        $oldBgHeight = $bgHight;
+
         switch ($type) {
             case 'normal':
 
@@ -336,10 +339,8 @@ class Base
                     // $circle_new_white = imagecolorallocatealpha($circle_new, 255, 255, 255, 127);
                     // imagecolortransparent($circle_new,$circle_new_white);
                     // imagefill($circle_new, 0, 0, $circle_new_white);
-                    $w_circle_new = $bgWidth;
-                    $h_circle_new = $bgHight;
                     # 按比例缩放
-                    imagecopyresized($circle_new, $pic, 0, 0, 0, 0, $w_circle_new, $h_circle_new, $Width, $Hight);
+                    imagecopyresized($circle_new, $pic, 0, 0, 0, 0, $src_w, $src_h, $Width, $Hight);
                     $pic = $circle_new;
                 }
 
@@ -369,6 +370,14 @@ class Base
             default:
                 # code...
                 break;
+        }
+
+        if ($rotate > 0) {
+            //设置bgcolor为透明
+            $pngTransparency = imagecolorallocatealpha($pic, 0, 0, 0, 127);
+            $pic = imagerotate($pic, 0 - $rotate, $pngTransparency);
+            $bgWidth = imagesx($pic);
+            $bgHight = imagesy($pic);
         }
 
         # 处理目标 x 轴
@@ -413,6 +422,37 @@ class Base
                 $dst_y = ceil($this->im_h * substr($dst_y, 0, strpos($dst_y, "%")) / 100);
             }
 
+        }
+
+        //如果有$rotate旋转角度，则重新设置 x, y 坐标值
+        if ($rotate > 0 && $rotate % 180 != 0) {
+            if ($rotate > 90 && $rotate < 180) {
+                $rotate = 180 - $rotate;
+            }
+            if ($rotate > 180 && $rotate <= 270) {
+                $rotate = $rotate % 180;
+            }
+            if ($rotate > 270 && $rotate < 360) {
+                $rotate = 360 - $rotate;
+            }
+
+            $rotate = 360 - $rotate;
+            $initAngle = rad2deg(atan2($oldBgHeight / 2, $oldBgWidth / 2));
+
+            $pointRotate = $rotate + 180 - $initAngle;
+            //获取圆心的坐标
+            $rx0 = $dst_x;
+            $ry0 = $dst_y;
+
+            $r = hypot(($oldBgWidth / 2), ($oldBgHeight / 2)); // 半径
+            $x0 = 0;
+            $y0 = 0;
+
+            $x1 = $x0 + $r * cos($pointRotate * M_PI / 180);
+            $y1 = $y0 + $r * sin($pointRotate * M_PI / 180);
+
+            $dst_x = ($x1/2) + $rx0;
+            $dst_y = -($y1/2) + $ry0;
         }
 
         //整合海报
@@ -503,8 +543,6 @@ class Base
     protected function CopyText($content, $dst_x, $dst_y, $font, $rgba, $max_w = 0, $font_family = '',
                                 $text_algin = 'left', $box_w = 100, $weight = 1, $space = 0, $rotate = 0)
     {
-
-        var_dump($rotate);
 
         $font = ($font * 3) / 4; // px 转化为 pt
 
@@ -624,6 +662,19 @@ class Base
         }
 
 
+        $oldBgWidth = $bgWidth;
+        $oldBgHeight = $bgHight;
+
+        if ($rotate > 0) {
+            //设置bgcolor为透明
+            $pngTransparency = imagecolorallocatealpha($result, 0, 0, 0, 127);
+            $result = imagerotate($result, 0 - $rotate, $pngTransparency);
+            $bgWidth = imagesx($result);
+            $bgHight = imagesy($result);
+        }
+
+
+
         # 处理目标 x 轴
         if ($dst_x === 'center') {
 
@@ -666,6 +717,38 @@ class Base
                 $dst_y = ceil($this->im_h * substr($dst_y, 0, strpos($dst_y, "%")) / 100);
             }
 
+        }
+
+
+        //如果有$rotate旋转角度，则重新设置 x, y 坐标值
+        if ($rotate > 0 && $rotate % 180 != 0) {
+            if ($rotate > 90 && $rotate < 180) {
+                $rotate = 180 - $rotate;
+            }
+            if ($rotate > 180 && $rotate <= 270) {
+                $rotate = $rotate % 180;
+            }
+            if ($rotate > 270 && $rotate < 360) {
+                $rotate = 360 - $rotate;
+            }
+
+            $rotate = 360 - $rotate;
+            $initAngle = rad2deg(atan2($oldBgHeight / 2, $oldBgWidth / 2));
+
+            $pointRotate = $rotate + 180 - $initAngle;
+            //获取圆心的坐标
+            $rx0 = $dst_x;
+            $ry0 = $dst_y;
+
+            $r = hypot(($oldBgWidth / 2), ($oldBgHeight / 2)); // 半径
+            $x0 = 0;
+            $y0 = 0;
+
+            $x1 = $x0 + $r * cos($pointRotate * M_PI / 180);
+            $y1 = $y0 + $r * sin($pointRotate * M_PI / 180);
+
+            $dst_x = ($x1/2) + $rx0;
+            $dst_y = -($y1/2) + $ry0;
         }
 
         # 自定义宽高的时候

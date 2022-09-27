@@ -1,7 +1,10 @@
 <?php
 namespace Kkokk\Tests;
+use Intervention\Image\Facades\Image;
 use Kkokk\Poster\Exception\Exception;
 use Kkokk\Poster\PosterManager;
+// import the Intervention Image Manager Class
+use Intervention\Image\ImageManager;
 
 require '../vendor/autoload.php';
 /**
@@ -96,51 +99,74 @@ try {
 	// ->buildText('查看TA的更多作品',413,757,15,[153, 153, 153, 1])
 	// ->buildQr('http://www.baidu.com','20%','20%',0,0,8,2)
 	// ->getPoster();
-	
+
+//    error_reporting(0);
+
+//    $font = __DIR__ . '/../src/style/simkai.ttf';
+//
+//    $image = imagecreate(400,300);
+//
+//    $blue = imagecolorallocate($image, 0, 0, 255);
+//
+//    $white = ImageColorAllocate($image, 255,255,255);
+//
+//    imagettftext($image, 44, 30, 50, 200, $white,$font, "java2s.com");
+//
+//    // Set the content-type
+//
+//    header("content-type: image/png");
+//
+//    imagepng($image);
+//
+//    imagedestroy($image);
+//
+//    exit();
+
 
 	# 批量合成
 	$buildImageManyArr = [
 		[
-		   'src' => 'https://test.acyapi.51acy.com/wechat/poster/top_bg.png'
+		   'src' => 'poster/8c7ebbbe29124ed2c8dc5f42ba2beb1a.jpg',
+            'dst_x' => 100,'dst_y' => 100,'src_x' => 0,'src_y' => 0,'src_w' => 0,'src_h' => 0,'alpha' => false,'type'  => 'normal', 'rotate' => 270
 		],
-		[
-		   'src' => 'https://test.acyapi.51acy.com/wechat/poster/half_circle.png','dst_x' => 254,'dst_y' => 321
-		],
-		[
-		   'src' => 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2854425629,4097927492&fm=26&gp=0.jpg','dst_x' => 253,'dst_y' => 326,'src_x' => 0,'src_y' => 0,'src_w' => 131,'src_h' => 131,'alpha' => false,'type'  => 'circle'
-		],
-		[
-		   'src'   => 'https://test.acyapi.51acy.com/wechat/poster/fengexian.png','dst_x' => 0,'dst_y' => 655
-		]
+//		[
+//		   'src' => 'https://test.acyapi.51acy.com/wechat/poster/half_circle.png','dst_x' => 254,'dst_y' => 321
+//		],
+//		[
+//		   'src' => 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2854425629,4097927492&fm=26&gp=0.jpg','dst_x' => 253,'dst_y' => 326,'src_x' => 0,'src_y' => 0,'src_w' => 131,'src_h' => 131,'alpha' => false,'type'  => 'circle'
+//		],
+//		[
+//		   'src'   => 'https://test.acyapi.51acy.com/wechat/poster/fengexian.png','dst_x' => 0,'dst_y' => 655
+//		]
 	];
 	$buildTextManyArr  = [
 		[
-           'content'=> '苏轼','dst_x' => 'center','dst_y' => 477,'font' => 16,'rgba' => [51, 51, 51, 1],'max_w'=> 0,'font_family' => '','weight' => 1,'space'=>20
+           'content'=> '明月几时有·把酒问青天','dst_x' => 30,'dst_y' => 450,'font' => 30,'rgba' => [51, 51, 51, 1],'max_w'=> 0,'font_family' => '','weight' => 1,'space'=>20, 'rotate' => 45
        ],
        [
-           'content'=> '明月几时有，把酒问青天。不知天上宫阙，今夕是何年。','dst_x' => 'center','dst_y' => 515,'font' => 16,'rgba' => [51, 51, 51, 1]
+           'content'=> '明月几时有，把酒问青天。不知天上宫阙，今夕是何年。','dst_x' => 0,'dst_y' => 515,'font' => 16,'rgba' => [51, 51, 51, 1],
        ],
-       [
-           'content'=> '我欲乘风归去，又恐琼楼玉宇，高处不胜寒。','dst_x' => 'center','dst_y' => 535,'font' => 16,'rgba' => [51, 51, 51, 1]
-       ],
-       [
-           'content'=> '起舞弄清影，何似在人间。转朱阁，低绮户，照无眠。','dst_x' => 'center','dst_y' => 555,'font' => 16,'rgba' => [51, 51, 51, 1]
-       ],
-       [
-           'content'=> '不应有恨，何事长向别时圆？','dst_x' => 'center','dst_y' => 575,'font' => 16,'rgba' => [51, 51, 51, 1]
-       ],
-       [
-           'content'=> '人有悲欢离合，月有阴晴圆缺，此事古难全。','dst_x' => 'center','dst_y' => 595,'font' => 16,'rgba' => [51, 51, 51, 1]
-       ],
-       [
-           'content'=> '但愿人长久，千里共婵娟。','dst_x' => 'center','dst_y' => 615,'font' => 16,'rgba' => [51, 51, 51, 1]
-       ],
-       [
-           'content'=> '长按识别','dst_x' => 'center','dst_y' => 720,'font' => 16,'rgba' => [51, 51, 51, 1]
-       ],
-       [
-           'content'=> '查看TA的更多作品','dst_x' => 'center','dst_y' => 757,'font' => 16,'rgba' => [51, 51, 51, 1],'max_w'=> 0,'font_family' => '','weight' => 1,'space'=>20
-       ]
+//       [
+//           'content'=> '我欲乘风归去，又恐琼楼玉宇，高处不胜寒。','dst_x' => 'center','dst_y' => 535,'font' => 16,'rgba' => [51, 51, 51, 1]
+//       ],
+//       [
+//           'content'=> '起舞弄清影，何似在人间。转朱阁，低绮户，照无眠。','dst_x' => 'center','dst_y' => 555,'font' => 16,'rgba' => [51, 51, 51, 1]
+//       ],
+//       [
+//           'content'=> '不应有恨，何事长向别时圆？','dst_x' => 'center','dst_y' => 575,'font' => 16,'rgba' => [51, 51, 51, 1]
+//       ],
+//       [
+//           'content'=> '人有悲欢离合，月有阴晴圆缺，此事古难全。','dst_x' => 'center','dst_y' => 595,'font' => 16,'rgba' => [51, 51, 51, 1]
+//       ],
+//       [
+//           'content'=> '但愿人长久，千里共婵娟。','dst_x' => 'center','dst_y' => 615,'font' => 16,'rgba' => [51, 51, 51, 1]
+//       ],
+//       [
+//           'content'=> '长按识别','dst_x' => 'center','dst_y' => 720,'font' => 16,'rgba' => [51, 51, 51, 1]
+//       ],
+//       [
+//           'content'=> '查看TA的更多作品','dst_x' => 'center','dst_y' => 757,'font' => 16,'rgba' => [51, 51, 51, 1],'max_w'=> 0,'font_family' => '','weight' => 1,'space'=>20
+//       ]
 	];
 	$buildQrManyArr    = [
 		[
@@ -150,13 +176,27 @@ try {
 			'text'=>'http://www.520yummy.com','dst_x'=>481,'dst_y'=>692,'src_x'=>0,'src_y'=>0,'src_w'=>0,'src_h'=>0,'size'=>4,'margin'=>1
 		]
 	];
+    // create Image from file
+//    $manager = new ImageManager(['driver' => 'gd']);
+//    foreach ($buildImageManyArr as $key => &$value) {
+//        if ($value['rotate'] > 0) {
+//            $src = 'temp/demo' . $key . '.png';
+//            $manager->make($value['src'])->rotate(0 - $value['rotate'])->save($src);
+//            $value['src'] = $src;
+//            $value['rotate'] = 0;
+//        }
+//    }
+
 
 	$result = PosterManager::Poster('poster/poster_user')
 	->buildIm(638,826,[255,255,255,127],false)
 	->buildImageMany($buildImageManyArr)
 	->buildTextMany($buildTextManyArr)
-	->buildQrMany($buildQrManyArr)
+//	->buildQrMany($buildQrManyArr)
 	->getPoster();
+
+
+//    $img = $manager->make('poster/poster_user.png')->rotate(-30)->save('bar.jpg');
 
 
 	//给图片添加水印
