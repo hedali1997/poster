@@ -665,6 +665,19 @@ class Base
         $oldBgWidth = $bgWidth;
         $oldBgHeight = $bgHight;
 
+        # 自定义宽高的时候
+        if (!empty($src_w) && !empty($src_h)) {
+            $circle_new = $this->createIm($bgWidth, $bgHight, [255, 255, 255, 127], $alpha = true);
+            // $circle_new_white = imagecolorallocatealpha($circle_new, 255, 255, 255, 127);
+            // imagecolortransparent($circle_new,$circle_new_white);
+            // imagefill($circle_new, 0, 0, $circle_new_white);
+            $w_circle_new = $bgWidth;
+            $h_circle_new = $bgHight;
+            # 按比例缩放
+            imagecopyresized($circle_new, $result, 0, 0, 0, 0, $w_circle_new, $h_circle_new, $Width, $Hight);
+            $result = $circle_new;
+        }
+
         if ($rotate > 0) {
             //设置bgcolor为透明
             $pngTransparency = imagecolorallocatealpha($result, 0, 0, 0, 127);
@@ -749,19 +762,6 @@ class Base
 
             $dst_x = ($x1/2) + $rx0;
             $dst_y = -($y1/2) + $ry0;
-        }
-
-        # 自定义宽高的时候
-        if (!empty($src_w) && !empty($src_h)) {
-            $circle_new = $this->createIm($bgWidth, $bgHight, [255, 255, 255, 127], $alpha = true);
-            // $circle_new_white = imagecolorallocatealpha($circle_new, 255, 255, 255, 127);
-            // imagecolortransparent($circle_new,$circle_new_white);
-            // imagefill($circle_new, 0, 0, $circle_new_white);
-            $w_circle_new = $bgWidth;
-            $h_circle_new = $bgHight;
-            # 按比例缩放
-            imagecopyresized($circle_new, $result, 0, 0, 0, 0, $w_circle_new, $h_circle_new, $Width, $Hight);
-            $result = $circle_new;
         }
 
 
